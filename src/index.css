@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --transition-speed: 300ms;
+    --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Surfaces */
+    --bg-main:          #050505;
+    --bg-secondary:     #0b0c10;
+    --surface-glass:    rgba(15, 15, 20, 0.75);
+    --surface-border:   rgba(255, 255, 255, 0.08);
+    --card-bg:          #141414;
+    --shadow-elevated:  0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(16, 185, 129, 0.08);
+
+    /* Branding */
+    --accent-primary:   #10b981;
+    --accent-secondary: #059669;
+    --accent-muted:     rgba(16, 185, 129, 0.12);
+    --accent-glow:      rgba(16, 185, 129, 0.25);
+
+    /* Typography */
+    --text-primary:     #ffffff;
+    --text-secondary:   rgba(255, 255, 255, 0.7);
+    --text-muted:       rgba(255, 255, 255, 0.4);
+
+    /* Interactive */
+    --input-bg:         rgba(255, 255, 255, 0.03);
+    --input-border:     rgba(255, 255, 255, 0.12);
+
+    /* Status */
+    --status-gain:      #34d399;
+    --status-loss:      #f87171;
+    --status-warning:   #fbbf24;
+    --status-neutral:   rgba(255, 255, 255, 0.4);
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    @apply antialiased overflow-x-hidden;
+    font-family: var(--font-main);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease;
+  }
+
+  /* Root must be a flex column so sticky navbar + flex:1 pages work */
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@layer components {
+  /* 💎 VAULT CARD */
+  .vault-card {
+    @apply relative rounded-[32px] p-8 sm:p-12 backdrop-blur-2xl border
+           transition-all duration-500 w-full max-w-[440px] z-10;
+    background-color: var(--surface-glass);
+    border-color: var(--surface-border);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .vault-card:hover {
+    @apply -translate-y-1;
+    box-shadow: 0 0 40px var(--accent-glow), var(--shadow-elevated);
+    border-color: var(--accent-primary);
+  }
+
+  /* ⚡ INPUTS */
+  .cyber-input {
+    @apply w-full p-4 rounded-xl outline-none transition-all duration-300;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+  }
+
+  .cyber-input:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 15px var(--accent-glow);
+    background-color: var(--input-bg);
+  }
+
+  .cyber-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* 🚀 PRIMARY BUTTON */
+  .cyber-btn {
+    @apply w-full py-4 rounded-xl font-bold uppercase tracking-[0.2em] text-[11px]
+           transition-all duration-300 active:scale-95 flex items-center justify-center gap-3;
+    background-image: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+    color: #ffffff;
+    box-shadow: 0 0 20px var(--accent-glow);
+    border: none;
+    cursor: pointer;
+  }
+
+  .cyber-btn:hover:not(:disabled) {
+    @apply brightness-110;
+    box-shadow: 0 0 35px var(--accent-glow);
+  }
+
+  .cyber-btn:disabled {
+    @apply opacity-40 cursor-not-allowed grayscale scale-100;
+  }
+
+  /* 🏷️ ACCENT BADGE */
+  .accent-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+    background-color: var(--accent-muted);
+    color: var(--accent-primary);
+  }
+
+  /* 📊 STATUS INDICATORS */
+  .status-gain    { color: var(--status-gain);    }
+  .status-loss    { color: var(--status-loss);    }
+  .status-warning { color: var(--status-warning); }
+  .status-neutral { color: var(--status-neutral); }
+}
+
+@layer utilities {
+  /* 📺 SCANLINE OVERLAY */
+  .scanline {
+    @apply fixed inset-0 pointer-events-none z-[99] opacity-[0.03];
+    background:
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 3px, 3px 100%;
+  }
+
+  /* 🎬 PAGE REVEAL */
+  .reveal-node {
+    animation: revealNode 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes revealNode {
+    from { opacity: 0; transform: scale(0.98) translateY(10px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0);    }
+  }
+
+  /* 🛰️ LASER SCANNER */
+  @keyframes laserScan {
+    0%   { top: 0%;   opacity: 0; }
+    50%  {             opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  .animate-laser {
+    @apply absolute left-0 w-full h-[1px] z-20 pointer-events-none;
+    background: linear-gradient(to right, transparent, var(--accent-primary), transparent);
+    box-shadow: 0 0 10px var(--accent-primary);
+    animation: laserScan 4s linear infinite;
+  }
+}
+
+/* 🎨 SCROLLBAR */
+::-webkit-scrollbar              { width: 6px; }
+::-webkit-scrollbar-track        { background: var(--bg-main); }
+::-webkit-scrollbar-thumb        { background: var(--surface-border); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover  { background: var(--accent-primary); }

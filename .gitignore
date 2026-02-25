@@ -1,0 +1,25 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        emerald: {
+          500: '#10b981', // Your specified accent
+          400: '#34d399',
+        },
+      },
+      animation: {
+        'scan': 'scan 4s linear infinite',
+      },
+      keyframes: {
+        scan: {
+          '0%': { top: '0%', opacity: '0' },
+          '100%': { top: '100%', opacity: '0' },
+          '50%': { opacity: '1' },
+        }
+      }
+    },
+  },
+  plugins: [require('tailwindcss-animate')],
+}
